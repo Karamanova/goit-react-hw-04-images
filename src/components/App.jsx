@@ -25,6 +25,8 @@ export class App extends Component {
     error: null,
     loading: false,
     showModal: false,
+    largeImageURL: '',
+    tags: '',
   };
   async componentDidUpdate (prevProps, prevState) {
   const { query, page } = this.state;
