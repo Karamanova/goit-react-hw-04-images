@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { GoSearch } from 'react-icons/go';
 import { SearchbarBox, SearchForm, SearchFormButton, SearchFormInput } from './Searchbar.styled';
+import { toast } from 'react-toastify';
+
 export class Searchbar extends Component {
   static propTypes = {
     onSearch: PropTypes.func.isRequired,
@@ -17,6 +19,10 @@ export class Searchbar extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { query } = this.state;
+    if (query.trim() === '') {
+      toast('🦄 There is nothing to search!');
+      return;
+    }
     this.props.onSearch(query);
     this.setState({ query: '' });
   };
@@ -24,7 +30,7 @@ export class Searchbar extends Component {
   render() {
     const { query } = this.state;
     return (
-<SearchbarBox>
+      <SearchbarBox>
         <SearchForm onSubmit={this.handleSubmit}>
           <SearchFormInput
             type="text"
@@ -33,12 +39,12 @@ export class Searchbar extends Component {
             autoFocus
             onChange={this.handleChange}
             placeholder="Search images and photos"
-    />
-    <SearchFormButton type="submit">
-    <GoSearch/>
-      </SearchFormButton>
-  </SearchForm>
+          />
+          <SearchFormButton type="submit">
+            <GoSearch />
+          </SearchFormButton>
+        </SearchForm>
       </SearchbarBox>
-);
+    );
   }
 }
