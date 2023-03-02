@@ -28,6 +28,7 @@ export class App extends Component {
     showModal: false,
     largeImageURL: '',
     tags: '',
+    showBtn: false,
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -44,9 +45,10 @@ export class App extends Component {
 
         if (hits.length > 0) {
           this.setState((prevState) => ({
-            totalHits,
+            // showBtn: this.state.page < Math.ceil(totalHits / 12),
             hits: [...prevState.hits, ...hits],
-            status: Status.RESOLVED,
+            totalHits: totalHits,
+            status: this.state.page < Math.ceil(totalHits / 12) ? Status.IDLE : Status.RESOLVED,
           }));
           if (page === 1)
             { toast.success(`🦄 We found ${totalHits} images.`) };
@@ -96,7 +98,7 @@ export class App extends Component {
   };
 
   render() {
-    const { hits, showModal, largeImageURL, tags, status } = this.state;
+    const { hits, showModal, largeImageURL, tags, status, showBtn } = this.state;
 
     return (
       <Container>
@@ -105,7 +107,8 @@ export class App extends Component {
         {status === Status.REJECTED && <SearchError />}
         {status === Status.PENDING && <Loader />}
         {hits.length !== 0 && <ImageGallery images={hits} onClick={this.handleToggleModal} />}
-        {hits.length >= API.searchParams.per_page && <Button onClick={this.handleClickLoadMore}/>}
+        {hits.length >= API.searchParams.per_page &&
+          <Button showBtn={showBtn} onClick={this.handleClickLoadMore} />}
       {showModal && 
         <Modal onClose={this.handleToggleModal}>
           <img src={largeImageURL} alt={tags}/>
