@@ -75,8 +75,9 @@ export class App extends Component {
   };
 
 handleFormSearch = (query) => {
+  const trimmedQuery = query.trim();
   this.setState({ 
-  query,
+  query: trimmedQuery,
   page: 1,
   totalHits: null,
   hits: [],
