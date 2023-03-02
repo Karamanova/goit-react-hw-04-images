@@ -44,12 +44,13 @@ export class App extends Component {
         const { totalHits, hits } = await API.getImages(API.searchParams);
 
         if (hits.length > 0) {
-          this.setState((prevState) => ({
-            // showBtn: this.state.page < Math.ceil(totalHits / 12),
-            hits: [...prevState.hits, ...hits],
-            totalHits: totalHits,
-            status: this.state.page < Math.ceil(totalHits / 12) ? Status.IDLE : Status.RESOLVED,
-          }));
+            const totalPages = Math.ceil(totalHits / API.searchParams.per_page);
+            this.setState((prevState) => ({
+              showBtn: page < totalPages,
+              hits: [...prevState.hits, ...hits],
+              totalHits,
+              status: page < totalPages ? Status.IDLE : Status.RESOLVED,
+            }));
           if (page === 1)
             { toast.success(`🦄 We found ${totalHits} images.`) };
           if (hits.length < 12)
@@ -107,8 +108,8 @@ export class App extends Component {
         {status === Status.REJECTED && <SearchError />}
         {status === Status.PENDING && <Loader />}
         {hits.length !== 0 && <ImageGallery images={hits} onClick={this.handleToggleModal} />}
-        {hits.length >= API.searchParams.per_page &&
-          <Button showBtn={showBtn} onClick={this.handleClickLoadMore} />}
+        {showBtn &&
+          <Button onClick={this.handleClickLoadMore} />}
       {showModal && 
         <Modal onClose={this.handleToggleModal}>
           <img src={largeImageURL} alt={tags}/>
