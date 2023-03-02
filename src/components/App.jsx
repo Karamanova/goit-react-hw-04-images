@@ -42,7 +42,7 @@ export class App extends Component {
           if (page >= 1) {
             this.setState((prevState) => ({
             totalHits: totalHits,
-            hits: prevState.hits ? [...prevState.hits, ...hits] : hits,
+            hits: [...prevState.hits, ...hits],
             status: Status.RESOLVED,
             }));
           };
