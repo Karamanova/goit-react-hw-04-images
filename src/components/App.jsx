@@ -75,16 +75,6 @@ export class App extends Component {
   };
 
 handleFormSearch = (query) => {
-  if(query === '') {
-    this.setState({
-    query: '',
-    totalHits: null,
-    hits: [],
-    status: Status.REJECTED,
-    loading: false,
-    });
-    toast('🦄 There is nothing to search!');
-   };
   this.setState({ 
   query,
   page: 1,
