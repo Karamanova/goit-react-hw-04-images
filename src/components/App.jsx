@@ -31,7 +31,7 @@ export class App extends Component {
   async componentDidUpdate (prevProps, prevState) {
   const { query, page } = this.state;
   const {query: prevQuery, page: prevPage} = prevState;
-  if((prevQuery.trim() !== query.trim() && query.trim().length > 0) || page > prevPage){
+   if(prevQuery !== this.state.query || prevPage !== this.state.page){
     API.searchParams.q = query;
     API.searchParams.page = page;
     this.setState({status: Status.PENDING})
