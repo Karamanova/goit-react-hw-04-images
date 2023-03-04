@@ -1,50 +1,44 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import { GoSearch } from 'react-icons/go';
 import { SearchbarBox, SearchForm, SearchFormButton, SearchFormInput } from './Searchbar.styled';
 import { toast } from 'react-toastify';
 
-export class Searchbar extends Component {
-  static propTypes = {
-    onSearch: PropTypes.func.isRequired,
-  };
+export const Searchbar = ({ onSearch }) => {
+const [query, setQuery] = useState('');
 
-  state = {
-    query: '',
-  };
+  const handleChange = e =>
+setQuery(e.currentTarget.value.toLowerCase());
 
-  handleChange = e =>
-    this.setState({ query: e.currentTarget.value.toLowerCase() });
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { query } = this.state;
-    if (query.trim() === '') {
-      toast('🦄 There is nothing to search!');
-      return;
-    }
-    this.props.onSearch(query);
-    this.setState({ query: '' });
-  };
-
-  render() {
-    const { query } = this.state;
-    return (
-      <SearchbarBox>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <SearchFormInput
-            type="text"
-            value={query}
-            autoComplete="off"
-            autoFocus
-            onChange={this.handleChange}
-            placeholder="Search images and photos"
-          />
-          <SearchFormButton type="submit">
-            <GoSearch />
-          </SearchFormButton>
-        </SearchForm>
-      </SearchbarBox>
-    );
-  }
+  const handleSubmit = e => {
+e.preventDefault();
+if (query.trim() === '') {
+toast('🦄 There is nothing to search!');
+return;
 }
+onSearch(query);
+setQuery('');
+};
+
+  return (
+<SearchbarBox>
+  <SearchForm onSubmit={handleSubmit}>
+    <SearchFormInput
+       type="text"
+       value={query}
+       autoComplete="off"
+       autoFocus
+       onChange={handleChange}
+       placeholder="Search images and photos"
+     />
+      <SearchFormButton type="submit">
+      <GoSearch />
+      </SearchFormButton>
+    </SearchForm>
+</SearchbarBox>
+);
+};
+
+Searchbar.propTypes = {
+onSearch: PropTypes.func.isRequired,
+};
