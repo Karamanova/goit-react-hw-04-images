@@ -19,7 +19,6 @@ const Status = {
 export const App = () => {
 const [query, setQuery] = useState('');
 const [page, setPage] = useState(1);
-const [perPage, setPerPage] = useState(12);
 const [status, setStatus] = useState(Status.IDLE);
 const [images, setImages] = useState([]);
 const [totalHits, setTotalHits] = useState(0);
@@ -35,11 +34,10 @@ useEffect (() => {
     setStatus(Status.PENDING);
     API.searchParams.q = query;
     API.searchParams.page = page;
-    API.searchParams.per_page = perPage;
     try {
       const { totalHits, hits } = await API.getImages(API.searchParams);
         if (hits.length > 0) {
-      const totalPages = Math.ceil(totalHits / perPage);
+      const totalPages = Math.ceil(totalHits / 12);
       setShowBtn(page < totalPages);
       setTotalHits(totalHits);
       setImages(prevState => [...prevState, ...hits]);
@@ -47,7 +45,7 @@ useEffect (() => {
       if (page === 1) {
         toast.success(`🦄 We found ${totalHits} images.`);
       }
-      if (hits.length < perPage) {
+      if (hits.length < 12) {
         toast.info(`🦄 No more images for ${query}`);
       }
     } else {
@@ -59,14 +57,7 @@ useEffect (() => {
     setStatus(Status.REJECTED);
   }
 })();
-  }, [query, page, perPage]);
-
-useEffect(() => {
-  window.scrollBy({
-    top: document.body.scrollHeight,
-    behavior: 'smooth',
-  });
-}, [images]);
+  }, [query, page]);
 
 const handleFormSearch = (query) => {
   if(!query) {
@@ -80,7 +71,12 @@ const handleFormSearch = (query) => {
    setTotalHits(0)
    setImages([]);
 };
-const handleChoicePerPage = (e) => setPerPage(e.value);
+const handleChoicePerPage = (e) => {
+  API.searchParams.per_page = e.value;
+  setPage(1);
+  setImages([]);
+  setTotalHits(0);
+};
 
 const handleClickLoadMore = () => setPage(page =>  page + 1);
 

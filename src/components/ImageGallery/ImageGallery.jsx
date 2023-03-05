@@ -1,9 +1,17 @@
 import PropTypes from "prop-types";
+import { useEffect } from 'react';
 import { ImageGalleryBox } from "./ImageGallery.styled";
 import { ImageGalleryItem } from "./ImageGalleryItem";
 import { Modal } from "components/Modal/Modal";
 
 export const ImageGallery = ({ images, onClick }) => {
+  useEffect(() => {
+    window.scrollBy({
+      top: document.body.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, [images]);
+
   return (
     <ImageGalleryBox>
       {images.map(({ id, webformatURL, largeImageURL, tags }) => (
