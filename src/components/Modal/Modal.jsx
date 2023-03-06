@@ -5,20 +5,21 @@ import { createPortal } from 'react-dom';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export const Modal = ({ children, onClose }) => {
-  useEffect(() => {
-    const closeModal = ({ code, target, currentTarget }) => {
-      if (code === 'Escape' || target === currentTarget) {
-        onClose();
-      };
-    };
-    window.addEventListener('keydown', closeModal);
-    return () => window.removeEventListener('keydown', closeModal);
-  }, [onClose]);
+export const Modal = ({children, onClose}) => {
+useEffect(() => {
+  window.addEventListener('keydown', closeModal);
+  return () => window.removeEventListener('keydown', closeModal);
+});
+
+const closeModal = ({code, target, currentTarget}) => {
+  if(code === 'Escape' || target === currentTarget){
+    onClose();
+  };
+};
 
   return createPortal(
-    <Overlay onClick={onClose}>
-      <ModalBox onClose={onClose}>
+    <Overlay onClick={closeModal}>
+      <ModalBox>
         {children}
       </ModalBox>
     </Overlay>,
